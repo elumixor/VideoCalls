@@ -16,7 +16,7 @@
   },
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss",
+      "styles": "scss",
       "skipTests": true
     },
     "@schematics/angular:class": {
