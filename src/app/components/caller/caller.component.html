@@ -1,1 +1,1 @@
-<Button text="caller works!" class="btn btn-primary"></Button>
+<Button *ngFor="let t of targets" [text]="'Call user ' + t.id" (tap)="call(t)"></Button>

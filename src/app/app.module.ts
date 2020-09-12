@@ -7,6 +7,7 @@ import { AppComponent } from "./app.component";
 import { LoginComponent } from './components/login/login.component';
 import { CalleeComponent } from './components/callee/callee.component';
 import { CallerComponent } from './components/caller/caller.component';
+import { SocketIOModule } from "nativescript-socketio/angular";
 
 @NgModule({
     bootstrap: [
@@ -16,6 +17,7 @@ import { CallerComponent } from './components/caller/caller.component';
         WebRTCModule,
         NativeScriptModule,
         AppRoutingModule,
+        SocketIOModule.forRoot("http://192.168.0.94:3000"),
     ],
     declarations: [
         AppComponent,

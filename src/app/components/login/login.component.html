@@ -1,4 +1,4 @@
-<GridLayout rows="auto, auto">
-    <Button row=0 text="Login as a controller and receiver (caller)" (click)="loginCaller()"></Button>
-    <Button row=1 text="Login as a provider (callee)" (click)="loginCallee()"></Button>
+<GridLayout rows="*, auto, auto, *">
+    <Button row=1 text="Login as a controller and receiver (caller)" (tap)="loginCaller()"></Button>
+    <Button row=2 text="Login as a provider (callee)" (tap)="loginCallee()"></Button>
 </GridLayout>

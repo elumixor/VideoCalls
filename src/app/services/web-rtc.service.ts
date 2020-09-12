@@ -1,19 +1,19 @@
-import {Injectable} from '@angular/core'
+import {Injectable, OnDestroy, OnInit} from '@angular/core'
 import {WebRTCView, Quality} from 'nativescript-webrtc-plugin'
 import {WebRTC} from 'nativescript-webrtc-plugin'
-import {User} from "~/app/shared/User"
+import {User} from "~/app/domain/user"
 import {knownFolders} from "tns-core-modules/file-system"
+import {SocketIO} from 'nativescript-socketio';
 
 @Injectable({
     providedIn: 'root',
 })
 export class WebRTCService {
     // readonly users: User[]
-
     caller: User
     callee: User
 
-    constructor() {
+    constructor(private socketIO: SocketIO) {
         const [caller, callee] = require('../../../sensitive/users.json')
         this.caller = caller
         this.callee = callee
@@ -27,11 +27,9 @@ export class WebRTCService {
             enableAudio: true, // default true
             enableVideo: false, // default true
             iceServers: [// Optional defaults to google stun servers
-                {
-                    url: 'stun:stun.l.google.com:19302',
-                }, {
-                    url: 'serverRequiresAuth', username: 'username', password: 'password',
-                }],
+                {url: 'stun:stun.l.google.com:19302'}
+                // {url: 'serverRequiresAuth', username: 'username', password: 'password',}
+            ],
         })
 
         console.log(webrtc)
@@ -63,28 +61,31 @@ export class WebRTCService {
         if (!WebRTC.hasPermissions()) {
             try {
                 await WebRTC.requestPermissions()
-                localStream = await webrtc.getUserMedia()
             } catch (e) {
                 console.error(e)
             }
         }
 
+        localStream = await webrtc.getUserMedia()
+
+        if (localStream)
+            webrtc.addLocalStream(localStream);
+
         webrtc.connect()
         webrtc.makeOffer()
 
-        // webrtc.addLocalStream(localStream);
     }
 
     async loginUser(user: User) {
+        this.socketIO.connect()
+
         new WebRTC({
-            enableAudio: true, enableVideo: false, iceServers: [{
-                url: 'stun:stun.l.google.com:19302',
-            }, {
-                url: 'serverRequiresAuth', username: 'username', password: 'password',
-            }],
+            enableAudio: true,
+            enableVideo: false,
+            iceServers: [{url: 'stun:stun.l.google.com:19302'}]
         })
 
-        // todo: send data to server with login
+        this.socketIO.emit('login', user)
     }
 
     async loginCallee(user: User) {
@@ -93,5 +94,9 @@ export class WebRTCService {
 
     async loginCaller(user: User) {
         await this.loginUser(user)
+    }
+
+    logout() {
+        this.socketIO.disconnect()
     }
 }
