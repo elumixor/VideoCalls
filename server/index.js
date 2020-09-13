@@ -4,9 +4,17 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
 const PORT = 3000
-let id = 0
 
 const connections = {}
+
+function checkConnection(id) {
+    if (!connections[id]) {
+        console.log(`Target ${id} is not logged in`)
+        return false
+    }
+
+    return true
+}
 
 io.on('connection', connection => {
     console.log(`A user (${connection.id}) connected`)
@@ -24,13 +32,15 @@ io.on('connection', connection => {
         connections[userID] = connection
     })
 
-    connection.on('call', ({targetId, webRTCData}) => {
-        console.log(`Calling ${targetId} from ${connection.userID}`)
-        if (!connections[targetId]) {
-            console.log(`Target ${targetId} is not logged in. Call failed.`)
-            return
-        }
-        connections[targetId].emit('receive call', {})
+    connection.on('call', ({targetID, webRTCData}) => {
+        console.log(`Calling ${targetID} from ${connection.userID}`)
+        if (!checkConnection(targetID)) return
+        connections[targetID].emit('receive call', webRTCData)
+    })
+
+    connection.on('iceCandidate', ({targetID, candidate}) => {
+        if (!checkConnection(targetID)) return
+        connections[targetID].emit('iceCandidate', candidate)
     })
 })
 

@@ -11,12 +11,16 @@ export class LoginComponent {
 
 
     async loginCaller() {
-        await this.webRTC.loginCaller(this.webRTC.caller)
+        await this.webRTC.init(this.webRTC.caller, this.webRTC.callee)
+        console.log('[CALLER] Web RTC init')
+        // await this.webRTC.loginCaller(this.webRTC.caller)
         await this.router.navigate(['caller'])
     }
 
     async loginCallee() {
-        await this.webRTC.loginCallee(this.webRTC.callee)
+        await this.webRTC.init(this.webRTC.callee, this.webRTC.caller)
+        console.log('[CALLEE] Web RTC init')
+        // await this.webRTC.loginCallee(this.webRTC.callee)
         await this.router.navigate(['callee'])
     }
 }

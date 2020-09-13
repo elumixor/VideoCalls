@@ -17,7 +17,7 @@ import { SocketIOModule } from "nativescript-socketio/angular";
         WebRTCModule,
         NativeScriptModule,
         AppRoutingModule,
-        SocketIOModule.forRoot("http://192.168.0.94:3000"),
+        SocketIOModule.forRoot("http://192.168.0.31:3000"),
     ],
     declarations: [
         AppComponent,

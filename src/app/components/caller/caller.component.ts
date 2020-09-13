@@ -12,8 +12,8 @@ export class CallerComponent implements OnDestroy {
 
     constructor(private webRTCService: WebRTCService) { }
 
-    call(target: User) {
-        this.webRTCService.call(target)
+    async call(target: User) {
+        await this.webRTCService.call(target)
     }
 
     ngOnDestroy(): void {
