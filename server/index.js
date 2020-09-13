@@ -3,18 +3,37 @@ const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
-io.on('connection', (socket) => {
-    console.log('a user connected')
+const PORT = 3000
+let id = 0
 
-    socket.on('disconnect', () => {
-        console.log('a user disconnected')
+const connections = {}
+
+io.on('connection', connection => {
+    console.log(`A user (${connection.id}) connected`)
+
+    connection.on('echo', msg => {
+        console.log(`[${connection.userID}] ${msg}`)
+        connection.emit('message', '(echo): ' + msg)
     })
 
-    socket.on('login', user => {
-        console.log('Trying to login as ' + user)
+    connection.emit('login')
+
+    connection.on('id', userID => {
+        console.log(`Connection ${connection.id} was assigned an id ${userID}`)
+        connection.userID = userID
+        connections[userID] = connection
+    })
+
+    connection.on('call', ({targetId, webRTCData}) => {
+        console.log(`Calling ${targetId} from ${connection.userID}`)
+        if (!connections[targetId]) {
+            console.log(`Target ${targetId} is not logged in. Call failed.`)
+            return
+        }
+        connections[targetId].emit('receive call', {})
     })
 })
 
-server.listen(3000, () => {
-    console.log('listening on localhost:3000')
+server.listen(PORT, () => {
+    console.log('listening on localhost:' + PORT)
 })

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {WebRTCService} from "~/app/services/web-rtc.service";
 import {User} from "~/app/domain/user";
 
@@ -7,12 +7,16 @@ import {User} from "~/app/domain/user";
     templateUrl: './caller.component.html',
     styleUrls: ['./caller.component.scss']
 })
-export class CallerComponent{
-    get targets() { return [this.webRTC.callee] }
+export class CallerComponent implements OnDestroy {
+    get targets() { return [this.webRTCService.callee] }
 
-    constructor(private webRTC: WebRTCService) { }
+    constructor(private webRTCService: WebRTCService) { }
 
     call(target: User) {
+        this.webRTCService.call(target)
+    }
 
+    ngOnDestroy(): void {
+        this.webRTCService.logout().then(() => console.log('Logged out'))
     }
 }
