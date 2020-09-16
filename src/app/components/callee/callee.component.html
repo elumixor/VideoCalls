@@ -1,1 +1,5 @@
-<Button text="callee works!" class="btn btn-primary"></Button>
+<Label *ngIf="!inCall; else videoRef" text="Waiting to receive a call" class="btn btn-primary"></Label>
+
+<ng-template #videoRef>
+    <WebRTCView #webRTCRef></WebRTCView>
+</ng-template>

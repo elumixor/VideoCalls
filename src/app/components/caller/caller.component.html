@@ -1,1 +1,12 @@
-<Button *ngFor="let t of targets" [text]="'Call user ' + t.id" (tap)="call(t)"></Button>
+<ng-container *ngIf="!inCall; else videoRef">
+    <Button *ngFor="let t of targets" [text]="'Call user ' + t.id" (tap)="call(t)"></Button>
+</ng-container>
+
+<ng-template #videoRef>
+    <AbsoluteLayout>
+        <WebRTCView #webRTCRef></WebRTCView>
+        <GridLayout height="100%" width="100%" rows="10, *, 90, 10" columns="10, 90, *, 10">
+            <ns-d-pad row="2" col="1" (actionReceived)="onDPadAction($event)" [size]="30"></ns-d-pad>
+        </GridLayout>
+    </AbsoluteLayout>
+</ng-template>

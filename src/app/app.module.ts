@@ -8,6 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { CalleeComponent } from './components/callee/callee.component';
 import { CallerComponent } from './components/caller/caller.component';
 import { SocketIOModule } from "nativescript-socketio/angular";
+import { DPadComponent } from './components/d-pad/d-pad.component';
 
 @NgModule({
     bootstrap: [
@@ -23,7 +24,8 @@ import { SocketIOModule } from "nativescript-socketio/angular";
         AppComponent,
         LoginComponent,
         CalleeComponent,
-        CallerComponent
+        CallerComponent,
+        DPadComponent,
     ],
     schemas: [
         NO_ERRORS_SCHEMA
